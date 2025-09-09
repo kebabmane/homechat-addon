@@ -1,0 +1,25 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Take down the S6 supervision tree when HomeChat fails
+# s6-overlay docs: https://github.com/just-containers/s6-overlay
+# ==============================================================================
+
+declare exit_code
+exit_code="${1}"
+
+bashio::log.info "HomeChat service exited with code ${exit_code}"
+
+if [[ "${exit_code}" != "0" ]] && [[ "${exit_code}" != "256" ]]; then
+  bashio::log.warning "HomeChat exited unexpectedly with code ${exit_code}"
+  
+  # Log some debugging information
+  bashio::log.info "Checking HomeChat logs..."
+  if [[ -f "/app/log/production.log" ]]; then
+    tail -n 20 /app/log/production.log | bashio::log.info
+  fi
+  
+  echo "${exit_code}" > /run/s6-linux-init-container-results/exitcode
+  /run/s6/basedir/bin/halt
+fi
+
+bashio::log.info "HomeChat service will restart"

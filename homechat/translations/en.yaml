@@ -1,0 +1,25 @@
+configuration:
+  site_name:
+    name: "Site Name"
+    description: "The name of your HomeChat instance that will appear in the interface"
+  allow_signups:
+    name: "Allow Signups"
+    description: "Allow new users to sign up for accounts. Disable this to lock down the chat to existing users only."
+  port:
+    name: "Port"
+    description: "The port HomeChat will listen on (default: 3000)"
+  ssl:
+    name: "SSL"
+    description: "Enable SSL/TLS encryption (requires SSL certificates in the ssl directory)"
+  log_level:
+    name: "Log Level"
+    description: "Set the logging level for HomeChat (debug, info, warning, error)"
+  enable_integrations:
+    name: "Enable Integrations"
+    description: "Enable API endpoints and integration features for external services like Home Assistant"
+  auto_create_api_token:
+    name: "Auto-create API Token"
+    description: "Automatically create an API token for Home Assistant integration on startup"
+  home_assistant_integration:
+    name: "Home Assistant Integration"
+    description: "Enable specific features and optimizations for Home Assistant integration"

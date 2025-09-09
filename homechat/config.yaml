@@ -1,0 +1,54 @@
+name: "HomeChat"
+version: "1.0.0"
+slug: "homechat"
+description: "Self-hosted chat for Home Assistant households. Built on Rails 8, SQLite, Tailwind, and Hotwire."
+url: "https://github.com/your-username/homechat"
+arch:
+  - armhf
+  - armv7
+  - aarch64
+  - amd64
+  - i386
+startup: application
+boot: auto
+init: false
+map:
+  - share:rw
+  - ssl:ro
+  - config:ro
+options:
+  site_name: "HomeChat"
+  allow_signups: true
+  port: 3000
+  ssl: false
+  log_level: "info"
+  enable_integrations: true
+  auto_create_api_token: true
+  home_assistant_integration: true
+schema:
+  site_name: "str?"
+  allow_signups: "bool"
+  port: "port"
+  ssl: "bool"
+  log_level: "list(debug|info|warning|error)?"
+  enable_integrations: "bool"
+  auto_create_api_token: "bool"
+  home_assistant_integration: "bool"
+ports:
+  "3000/tcp": 3000
+webui: "http://[HOST]:[PORT:3000]"
+ingress: true
+ingress_port: 3000
+panel_icon: "mdi:chat"
+panel_title: "HomeChat"
+panel_admin: false
+hassio_api: false
+homeassistant_api: false
+host_network: false
+host_dbus: false
+host_ipc: false
+host_pid: false
+privileged: []
+full_access: false
+apparmor: true
+image: "ghcr.io/your-username/addon-homechat-{arch}"

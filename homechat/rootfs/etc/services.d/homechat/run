@@ -1,0 +1,106 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Start HomeChat Rails application
+# s6-overlay docs: https://github.com/just-containers/s6-overlay
+# ==============================================================================
+
+declare site_name
+declare allow_signups
+declare port
+declare ssl
+declare log_level
+declare enable_integrations
+declare auto_create_api_token
+declare home_assistant_integration
+
+bashio::log.info "Starting HomeChat..."
+
+# Get configuration options
+site_name=$(bashio::config 'site_name')
+allow_signups=$(bashio::config 'allow_signups')
+port=$(bashio::config 'port')
+ssl=$(bashio::config 'ssl')
+log_level=$(bashio::config 'log_level')
+enable_integrations=$(bashio::config 'enable_integrations')
+auto_create_api_token=$(bashio::config 'auto_create_api_token')
+home_assistant_integration=$(bashio::config 'home_assistant_integration')
+
+# Set environment variables
+export RAILS_ENV=production
+export RAILS_SERVE_STATIC_FILES=true
+export RAILS_LOG_TO_STDOUT=true
+export PORT="${port}"
+export SITE_NAME="${site_name:-HomeChat}"
+export ALLOW_SIGNUPS="${allow_signups:-true}"
+export ENABLE_INTEGRATIONS="${enable_integrations:-true}"
+export AUTO_CREATE_API_TOKEN="${auto_create_api_token:-true}"
+export HOME_ASSISTANT_INTEGRATION="${home_assistant_integration:-true}"
+
+# Set Home Assistant specific environment variables
+if bashio::supervisor.ping; then
+    export SUPERVISOR_TOKEN="${SUPERVISOR_TOKEN}"
+    export HOMEASSISTANT_URL="http://supervisor/core"
+fi
+
+# Set log level for Rails
+case "${log_level}" in
+    "debug")
+        export RAILS_LOG_LEVEL=0
+        ;;
+    "info")
+        export RAILS_LOG_LEVEL=1
+        ;;
+    "warning")
+        export RAILS_LOG_LEVEL=2
+        ;;
+    "error")
+        export RAILS_LOG_LEVEL=3
+        ;;
+    *)
+        export RAILS_LOG_LEVEL=1
+        ;;
+esac
+
+bashio::log.info "Site Name: ${SITE_NAME}"
+bashio::log.info "Allow Signups: ${ALLOW_SIGNUPS}"
+bashio::log.info "Port: ${PORT}"
+bashio::log.info "SSL: ${ssl}"
+bashio::log.info "Log Level: ${log_level}"
+
+# Ensure database exists
+cd /app || bashio::exit.nok "Could not change to app directory"
+
+# Setup database if needed
+if [[ ! -f "/data/production.sqlite3" ]]; then
+    bashio::log.info "Setting up database..."
+    export DATABASE_URL="sqlite3:///data/production.sqlite3"
+    ./bin/rails db:prepare
+else
+    bashio::log.info "Database exists, running migrations..."
+    export DATABASE_URL="sqlite3:///data/production.sqlite3"
+    ./bin/rails db:migrate
+fi
+
+# Auto-create API token for Home Assistant integration if enabled
+if [[ "${auto_create_api_token}" == "true" && "${home_assistant_integration}" == "true" ]]; then
+    bashio::log.info "Setting up Home Assistant integration..."
+    ./bin/rails runner "
+      # Create API token if it doesn't exist
+      unless ApiToken.exists?(name: 'Home Assistant Addon')
+        token = ApiToken.generate_for_integration('Home Assistant Addon')
+        puts 'Created API token for Home Assistant integration'
+        puts 'Token: ' + token.token
+      end
+      
+      # Set integration settings
+      Setting.set('home_assistant_enabled', true)
+      Setting.set('api_enabled', true)
+      Setting.set('webhook_base_url', ENV.fetch('WEBHOOK_BASE_URL', 'http://homeassistant.local:3000'))
+      
+      puts 'Home Assistant integration configured'
+    " 2>/dev/null || bashio::log.warning "Failed to setup integration (this is normal on first run)"
+fi
+
+# Start the Rails server
+bashio::log.info "Starting HomeChat server on port ${port}..."
+exec ./bin/rails server -b 0.0.0.0 -p "${port}"
