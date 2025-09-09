@@ -28,7 +28,7 @@ RUN \
         curl \
         git \
         libc6-compat \
-        libvips-dev \
+        vips-dev \
         yaml-dev \
         zlib-dev && \
     gem install bundler
