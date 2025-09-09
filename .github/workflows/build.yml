@@ -20,9 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
+        arch: ["aarch64", "amd64"]
     
     permissions:
       contents: read
@@ -67,12 +65,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract platform architecture
+      - name: Set platform variables
         id: platform
         run: |
-          platform=${{ matrix.platform }}
-          arch=${platform##*/}
-          echo "arch=$arch" >> $GITHUB_OUTPUT
+          case "${{ matrix.arch }}" in
+            "amd64")
+              echo "docker_platform=linux/amd64" >> $GITHUB_OUTPUT
+              echo "arch=amd64" >> $GITHUB_OUTPUT
+              ;;
+            "aarch64")
+              echo "docker_platform=linux/arm64" >> $GITHUB_OUTPUT
+              echo "arch=aarch64" >> $GITHUB_OUTPUT
+              ;;
+          esac
 
       - name: Build and push by digest
         id: build
@@ -80,7 +85,7 @@ jobs:
         with:
           context: .
           file: addon/homechat/Dockerfile
-          platforms: ${{ matrix.platform }}
+          platforms: ${{ steps.platform.outputs.docker_platform }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha
