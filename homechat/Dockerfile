@@ -1,12 +1,14 @@
 ARG BUILD_FROM=alpine:3.20
 FROM $BUILD_FROM
 
-# Set shell
+# Install bash first, then set it as default shell
+RUN apk add --no-cache bash
+
+# Set shell to bash now that it's installed
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install system dependencies including s6-overlay for Home Assistant addon compatibility
+# Install remaining system dependencies including s6-overlay for Home Assistant addon compatibility
 RUN apk add --no-cache \
-        bash \
         curl \
         jq \
         tzdata \
