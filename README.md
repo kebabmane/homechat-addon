@@ -7,7 +7,7 @@ This repository contains the HomeChat add-on for Home Assistant, providing self-
 1. Add this repository to your Home Assistant add-on store:
    - Go to **Supervisor** > **Add-on Store**
    - Click the menu (three dots) and select **Repositories**
-   - Add: `https://github.com/your-username/homechat-addon`
+   - Add: `https://github.com/kebabmane/homechat-addon`
 
 2. Find and install the HomeChat add-on
 3. Configure the add-on options as needed

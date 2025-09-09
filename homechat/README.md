@@ -73,7 +73,7 @@ The add-on will automatically create and migrate the database on first start. If
 
 ## Support
 
-For support and bug reports, please visit the [HomeChat repository](https://github.com/your-username/homechat).
+For support and bug reports, please visit the [HomeChat repository](https://github.com/kebabmane/homechat).
 
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
