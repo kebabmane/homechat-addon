@@ -1,8 +1,17 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/alpine-base:3.20
+ARG BUILD_FROM=alpine:3.20
 FROM $BUILD_FROM
 
 # Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# Install system dependencies including s6-overlay for Home Assistant addon compatibility
+RUN apk add --no-cache \
+        bash \
+        curl \
+        jq \
+        tzdata \
+        ca-certificates \
+        s6-overlay
 
 # Install Ruby and build dependencies
 ARG RUBY_VERSION=3.3.0
@@ -42,11 +51,11 @@ RUN addgroup -g 1000 -S rails && \
     adduser -u 1000 -D -S -G rails rails && \
     chown -R rails:rails /app
 
+# Copy root filesystem first (as root for proper permissions)
+COPY addon/rootfs /
+
 # Switch to rails user
 USER rails:rails
-
-# Copy root filesystem
-COPY rootfs /
 
 # Build arguments
 ARG BUILD_ARCH
@@ -74,3 +83,9 @@ LABEL \
     org.opencontainers.image.created=${BUILD_DATE} \
     org.opencontainers.image.revision=${BUILD_REF} \
     org.opencontainers.image.version=${BUILD_VERSION}
+
+# Expose default port
+EXPOSE 3000
+
+# Set up s6-overlay entrypoint
+ENTRYPOINT ["/init"]
