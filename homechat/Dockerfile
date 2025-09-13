@@ -1,19 +1,8 @@
-ARG BUILD_FROM=alpine:3.20
+ARG BUILD_FROM
 FROM $BUILD_FROM
 
-# Install bash first, then set it as default shell
-RUN apk add --no-cache bash
-
-# Set shell to bash now that it's installed
+# Set shell to bash (already available in HA base images)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-# Install remaining system dependencies including s6-overlay for Home Assistant addon compatibility
-RUN apk add --no-cache \
-        curl \
-        jq \
-        tzdata \
-        ca-certificates \
-        s6-overlay
 
 # Install Ruby and build dependencies
 ARG RUBY_VERSION=3.3.0
@@ -54,7 +43,7 @@ RUN addgroup -g 1000 -S rails && \
     chown -R rails:rails /app
 
 # Copy root filesystem first (as root for proper permissions)
-COPY addon/homechat/rootfs /
+COPY homechat/rootfs /
 
 # Switch to rails user
 USER rails:rails
@@ -79,7 +68,7 @@ LABEL \
     org.opencontainers.image.vendor="HomeChat Team" \
     org.opencontainers.image.authors="HomeChat Team" \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.url="https://github.com/your-username/homechat-addon" \
+    org.opencontainers.image.url="https://github.com/kebabmane/homechat-addon" \
     org.opencontainers.image.source="https://github.com/${BUILD_REPOSITORY}" \
     org.opencontainers.image.documentation="https://github.com/${BUILD_REPOSITORY}/blob/main/README.md" \
     org.opencontainers.image.created=${BUILD_DATE} \
