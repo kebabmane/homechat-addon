@@ -7,17 +7,17 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Install Ruby and build dependencies
 ARG RUBY_VERSION=3.3.0
 RUN \
+    apk update && \
     apk add --no-cache \
         ruby \
         ruby-dev \
-        ruby-bundler \
         build-base \
         sqlite \
         sqlite-dev \
         curl \
         git \
         libc6-compat \
-        vips-dev \
+        libffi-dev \
         yaml-dev \
         zlib-dev && \
     gem install bundler
