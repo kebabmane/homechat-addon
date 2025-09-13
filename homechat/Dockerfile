@@ -43,7 +43,7 @@ RUN addgroup -g 1000 -S rails && \
     chown -R rails:rails /app
 
 # Copy root filesystem first (as root for proper permissions)
-COPY homechat/rootfs /
+COPY rootfs /
 
 # Switch to rails user
 USER rails:rails
