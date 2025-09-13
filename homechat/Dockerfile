@@ -41,8 +41,8 @@ COPY homechat/ ./
 ENV RAILS_ENV=production
 
 # Build Tailwind CSS and precompile assets
-RUN bundle exec rails tailwindcss:build
-RUN bundle exec rails assets:precompile
+RUN SECRET_KEY_BASE=dummy bundle exec rails tailwindcss:build
+RUN SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
 
 # Copy root filesystem
 COPY addon/homechat/rootfs /
