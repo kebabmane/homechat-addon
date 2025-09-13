@@ -29,6 +29,9 @@ home_assistant_integration=$(bashio::config 'home_assistant_integration')
 export RAILS_ENV=production
 export RAILS_SERVE_STATIC_FILES=true
 export RAILS_LOG_TO_STDOUT=true
+export RAILS_FORCE_SSL=false
+export RAILS_ASSUME_SSL=false
+export RAILS_RELATIVE_URL_ROOT=""
 # Generate or load persistent secret key
 if [[ ! -f "/data/secret_key_base" ]]; then
     echo "$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')" > /data/secret_key_base
