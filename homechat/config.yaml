@@ -51,4 +51,4 @@ host_pid: false
 privileged: []
 full_access: false
 apparmor: true
-image: "ghcr.io/kebabmane/{arch}-addon-homechat"
+image: "ghcr.io/kebabmane/{arch}-addon-homechat:latest"
