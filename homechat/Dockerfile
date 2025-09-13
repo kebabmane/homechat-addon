@@ -4,8 +4,44 @@ FROM $BUILD_FROM
 # Set shell to bash (already available in HA base images)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# Install Ruby and build dependencies
+ARG RUBY_VERSION=3.3.0
+RUN \
+    apk update && \
+    apk add --no-cache \
+        ruby \
+        ruby-dev \
+        build-base \
+        sqlite \
+        sqlite-dev \
+        curl \
+        git \
+        libc6-compat \
+        libffi-dev \
+        yaml-dev \
+        zlib-dev && \
+    gem install bundler
+
+# Create app directory
+WORKDIR /app
+
+# Copy Gemfile and install dependencies
+COPY homechat/Gemfile homechat/Gemfile.lock ./
+RUN bundle config --global frozen 1
+RUN bundle install --without development test
+
+# Copy application code
+COPY homechat/ ./
+
+# Precompile assets for production
+ENV RAILS_ENV=production
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+
 # Copy root filesystem
 COPY addon/homechat/rootfs /
+
+# Create data directory for SQLite database
+RUN mkdir -p /data && chown nobody:nogroup /data
 
 # Build arguments
 ARG BUILD_ARCH
