@@ -45,19 +45,19 @@ fi
 # Set log level for Rails
 case "${log_level}" in
     "debug")
-        export RAILS_LOG_LEVEL=0
+        export RAILS_LOG_LEVEL=debug
         ;;
     "info")
-        export RAILS_LOG_LEVEL=1
+        export RAILS_LOG_LEVEL=info
         ;;
     "warning")
-        export RAILS_LOG_LEVEL=2
+        export RAILS_LOG_LEVEL=warn
         ;;
     "error")
-        export RAILS_LOG_LEVEL=3
+        export RAILS_LOG_LEVEL=error
         ;;
     *)
-        export RAILS_LOG_LEVEL=1
+        export RAILS_LOG_LEVEL=info
         ;;
 esac
 
