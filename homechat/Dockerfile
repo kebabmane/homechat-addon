@@ -36,9 +36,8 @@ RUN bundle install --without development test
 # Copy application code
 COPY homechat/ ./
 
-# Precompile assets for production
+# Set production environment
 ENV RAILS_ENV=production
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 # Copy root filesystem
 COPY addon/homechat/rootfs /
