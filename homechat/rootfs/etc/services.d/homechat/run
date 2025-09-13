@@ -29,7 +29,11 @@ home_assistant_integration=$(bashio::config 'home_assistant_integration')
 export RAILS_ENV=production
 export RAILS_SERVE_STATIC_FILES=true
 export RAILS_LOG_TO_STDOUT=true
-export SECRET_KEY_BASE=$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')
+# Generate or load persistent secret key
+if [[ ! -f "/data/secret_key_base" ]]; then
+    echo "$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')" > /data/secret_key_base
+fi
+export SECRET_KEY_BASE=$(cat /data/secret_key_base)
 export PORT="${port}"
 export SITE_NAME="${site_name:-HomeChat}"
 export ALLOW_SIGNUPS="${allow_signups:-true}"
