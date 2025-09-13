@@ -11,6 +11,8 @@ RUN \
     apk add --no-cache \
         ruby \
         ruby-dev \
+        ruby-bigdecimal \
+        ruby-bundler \
         build-base \
         sqlite \
         sqlite-dev \
@@ -19,7 +21,9 @@ RUN \
         libc6-compat \
         libffi-dev \
         yaml-dev \
-        zlib-dev && \
+        zlib-dev \
+        nodejs \
+        npm && \
     gem install bundler
 
 # Create app directory
@@ -27,8 +31,9 @@ WORKDIR /app
 
 # Copy Gemfile and install dependencies
 COPY homechat/Gemfile homechat/Gemfile.lock ./
+RUN ls -la && cat Gemfile
 RUN bundle config --global frozen 1
-RUN bundle install --without development test
+RUN bundle install --without development test --verbose
 
 # Copy application code
 COPY homechat/ ./
