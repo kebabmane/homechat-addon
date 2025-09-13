@@ -31,7 +31,8 @@ WORKDIR /app
 
 # Copy Gemfile and install dependencies
 COPY homechat/Gemfile homechat/Gemfile.lock ./
-RUN bundle install --without development test
+RUN bundle config set --local without 'development test' && \
+    bundle install --deployment
 
 # Copy application code
 COPY homechat/ ./
