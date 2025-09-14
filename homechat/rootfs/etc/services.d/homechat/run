@@ -89,6 +89,10 @@ else
     ./bin/rails db:migrate
 fi
 
+# Always run seeds to ensure admin user is created if needed
+bashio::log.info "Running database seeds..."
+./bin/rails db:seed
+
 # Display admin credentials if they exist
 if [[ -f "/data/admin_credentials.json" ]]; then
     bashio::log.info "🔐 Admin credentials available!"
