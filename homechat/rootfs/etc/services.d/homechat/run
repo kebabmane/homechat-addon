@@ -89,6 +89,27 @@ else
     ./bin/rails db:migrate
 fi
 
+# Display admin credentials if they exist
+if [[ -f "/data/admin_credentials.json" ]]; then
+    bashio::log.info "🔐 Admin credentials available!"
+
+    # Parse credentials from JSON file using bashio (Home Assistant's JSON parser)
+    admin_username=$(bashio::jq /data/admin_credentials.json '.username')
+    admin_password=$(bashio::jq /data/admin_credentials.json '.password')
+    created_at=$(bashio::jq /data/admin_credentials.json '.created_at')
+
+    bashio::log.info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    bashio::log.info "🚀 HOMECHAT ADMIN ACCESS"
+    bashio::log.info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    bashio::log.info "👤 Username: ${admin_username}"
+    bashio::log.info "🔑 Password: ${admin_password}"
+    bashio::log.info "🕒 Created: ${created_at}"
+    bashio::log.info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    bashio::log.info "⚠️  Please change this password after first login!"
+    bashio::log.info "🌐 Access HomeChat at: http://homeassistant.local:${port}"
+    bashio::log.info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+fi
+
 # Auto-create API token for Home Assistant integration if enabled
 if [[ "${auto_create_api_token}" == "true" && "${home_assistant_integration}" == "true" ]]; then
     bashio::log.info "Setting up Home Assistant integration..."
@@ -99,12 +120,12 @@ if [[ "${auto_create_api_token}" == "true" && "${home_assistant_integration}" ==
         puts 'Created API token for Home Assistant integration'
         puts 'Token: ' + token.token
       end
-      
+
       # Set integration settings
       Setting.set('home_assistant_enabled', true)
       Setting.set('api_enabled', true)
       Setting.set('webhook_base_url', ENV.fetch('WEBHOOK_BASE_URL', 'http://homeassistant.local:3000'))
-      
+
       puts 'Home Assistant integration configured'
     " 2>/dev/null || bashio::log.warning "Failed to setup integration (this is normal on first run)"
 fi
