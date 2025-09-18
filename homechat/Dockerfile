@@ -23,7 +23,11 @@ RUN \
         yaml-dev \
         zlib-dev \
         nodejs \
-        npm && \
+        npm \
+        avahi-dev \
+        avahi-compat-libdns_sd \
+        avahi \
+        dbus && \
     gem install bundler
 
 # Create app directory
@@ -45,10 +49,13 @@ RUN SECRET_KEY_BASE=dummy bundle exec rails tailwindcss:build
 RUN SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
 
 # Copy root filesystem
-COPY addon/homechat/rootfs /
+COPY rootfs /
 
-# Create data directory for SQLite database
-RUN mkdir -p /data && chown nobody:nogroup /data
+# Create data directory for SQLite database and setup Avahi/D-Bus
+RUN mkdir -p /data && chown nobody:nogroup /data && \
+    mkdir -p /var/run/avahi-daemon && \
+    mkdir -p /var/run/dbus && \
+    chmod 755 /var/run/avahi-daemon /var/run/dbus
 
 # Build arguments
 ARG BUILD_ARCH
