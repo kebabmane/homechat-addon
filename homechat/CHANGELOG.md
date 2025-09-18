@@ -2,6 +2,17 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.1] - 2024-09-19
+
+### Fixed
+- Updated HomeChat icon to match new unified branding across all platforms
+- Improved icon visibility and consistency in Home Assistant dashboard
+- Enhanced add-on visual identity
+
+### Changed
+- Refreshed add-on icon with modern chat bubble design
+- Updated icon.png with high-quality 192x192 resolution
+
 ## [1.0.0] - 2024-12-09
 
 ### Added
