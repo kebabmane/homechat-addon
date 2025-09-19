@@ -49,7 +49,7 @@ RUN SECRET_KEY_BASE=dummy bundle exec rails tailwindcss:build
 RUN SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
 
 # Copy root filesystem
-COPY rootfs /
+COPY homechat/rootfs /
 
 # Create data directory for SQLite database and setup Avahi/D-Bus
 RUN mkdir -p /data && chown nobody:nogroup /data && \
