@@ -22,6 +22,7 @@ options:
   enable_integrations: true
   auto_create_api_token: true
   home_assistant_integration: true
+  network_range: "192.168.0.0/16"
 schema:
   site_name: "str?"
   allow_signups: "bool"
@@ -31,6 +32,7 @@ schema:
   enable_integrations: "bool"
   auto_create_api_token: "bool"
   home_assistant_integration: "bool"
+  network_range: "str?"
 ports:
   "3000/tcp": 3000
 webui: "http://[HOST]:[PORT:3000]"

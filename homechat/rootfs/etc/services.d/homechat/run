@@ -12,6 +12,7 @@ declare log_level
 declare enable_integrations
 declare auto_create_api_token
 declare home_assistant_integration
+declare network_range
 
 bashio::log.info "Starting HomeChat..."
 
@@ -24,6 +25,7 @@ log_level=$(bashio::config 'log_level')
 enable_integrations=$(bashio::config 'enable_integrations')
 auto_create_api_token=$(bashio::config 'auto_create_api_token')
 home_assistant_integration=$(bashio::config 'home_assistant_integration')
+network_range=$(bashio::config 'network_range')
 
 # Set environment variables
 export RAILS_ENV=production
@@ -44,6 +46,7 @@ export ALLOW_SIGNUPS="${allow_signups:-true}"
 export ENABLE_INTEGRATIONS="${enable_integrations:-true}"
 export AUTO_CREATE_API_TOKEN="${auto_create_api_token:-true}"
 export HOME_ASSISTANT_INTEGRATION="${home_assistant_integration:-true}"
+export NETWORK_RANGE="${network_range:-192.168.0.0/16}"
 
 # Set Home Assistant specific environment variables
 if bashio::supervisor.ping; then

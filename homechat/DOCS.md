@@ -81,6 +81,26 @@ Each user can customize their experience at `/settings`:
 - Configure "Enter to send" preference
 - Update profile information
 
+### Network Range
+**Default**: `192.168.0.0/16`
+**Type**: String (optional)
+
+Specifies the network range where your Home Assistant server is located. This is used to configure trusted proxies for proper request handling when accessing HomeChat through Home Assistant's ingress interface.
+
+**Common values**:
+- `192.168.0.0/16` - Covers most home networks (192.168.x.x)
+- `192.168.1.0/24` - Specific subnet (192.168.1.x only)
+- `10.0.0.0/8` - Private networks using 10.x.x.x
+- `172.16.0.0/12` - Private networks using 172.16-31.x.x
+
+**How to determine your network range**:
+1. Find your Home Assistant server's IP address (e.g., 192.168.1.161)
+2. Use the appropriate range that includes this IP:
+   - If HA IP is 192.168.1.161, use `192.168.0.0/16` or `192.168.1.0/24`
+   - If HA IP is 10.0.1.100, use `10.0.0.0/8`
+
+**Note**: This setting is crucial for proper CSRF protection and request handling when using Home Assistant's ingress feature.
+
 ## Networking
 
 ### Internal Access
