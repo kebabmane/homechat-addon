@@ -5,6 +5,22 @@
 
 bashio::log.info "Starting Avahi daemon for mDNS service discovery..."
 
+# Wait for D-Bus to be ready
+bashio::log.info "Waiting for D-Bus to be ready..."
+timeout=30
+while [ $timeout -gt 0 ]; do
+    if [ -S /var/run/dbus/system_bus_socket ]; then
+        break
+    fi
+    sleep 1
+    timeout=$((timeout - 1))
+done
+
+if [ $timeout -eq 0 ]; then
+    bashio::log.error "D-Bus socket not found after 30 seconds"
+    exit 1
+fi
+
 # Create runtime directory
 mkdir -p /var/run/avahi-daemon
 

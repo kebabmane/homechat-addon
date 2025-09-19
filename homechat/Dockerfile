@@ -55,7 +55,8 @@ COPY addon/homechat/rootfs /
 RUN mkdir -p /data && chown nobody:nogroup /data && \
     mkdir -p /var/run/avahi-daemon && \
     mkdir -p /var/run/dbus && \
-    chmod 755 /var/run/avahi-daemon /var/run/dbus
+    mkdir -p /var/lib/dbus && \
+    chmod 755 /var/run/avahi-daemon /var/run/dbus /var/lib/dbus
 
 # Build arguments
 ARG BUILD_ARCH

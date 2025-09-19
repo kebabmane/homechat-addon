@@ -1,0 +1,18 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Start D-Bus system daemon
+# ==============================================================================
+
+bashio::log.info "Starting D-Bus system daemon..."
+
+# Create runtime directories
+mkdir -p /var/run/dbus
+mkdir -p /var/lib/dbus
+
+# Initialize D-Bus machine ID if it doesn't exist
+if [ ! -f /var/lib/dbus/machine-id ]; then
+    dbus-uuidgen > /var/lib/dbus/machine-id
+fi
+
+# Start D-Bus system daemon
+exec dbus-daemon --system --nofork --nopidfile
