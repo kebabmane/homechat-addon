@@ -35,6 +35,7 @@ jobs:
         with:
           # Fetch the main homechat repository to build the Rails app
           repository: kebabmane/homechat
+          ref: feat/web-responsive-refresh
           path: homechat
 
       - name: Checkout addon repository
