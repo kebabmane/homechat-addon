@@ -1,5 +1,5 @@
 name: "HomeChat"
-version: "1.0.6"
+version: "1.0.7"
 slug: "homechat"
 description: "Self-hosted chat for Home Assistant households. Built on Rails 8, SQLite, Tailwind, and Hotwire."
 url: "https://github.com/kebabmane/homechat"
