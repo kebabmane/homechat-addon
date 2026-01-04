@@ -8,9 +8,22 @@ configuration:
   port:
     name: "Port"
     description: "The port HomeChat will listen on (default: 3000)"
+  access_mode:
+    name: "Access Mode"
+    description: >-
+      How HomeChat is accessed:
+      - ingress: Via Home Assistant sidebar (recommended, HA handles SSL)
+      - direct_ssl: Direct access with SSL certificates (for port forwarding)
+      - direct_http: Direct HTTP access (local network only, no encryption)
   ssl:
     name: "SSL"
-    description: "Enable SSL/TLS encryption (requires SSL certificates in the ssl directory)"
+    description: "Legacy option - use Access Mode instead. Enable SSL/TLS encryption."
+  certfile:
+    name: "SSL Certificate"
+    description: "SSL certificate filename in /ssl directory (e.g., fullchain.pem). Required for direct_ssl mode."
+  keyfile:
+    name: "SSL Key"
+    description: "SSL private key filename in /ssl directory (e.g., privkey.pem). Required for direct_ssl mode."
   log_level:
     name: "Log Level"
     description: "Set the logging level for HomeChat (debug, info, warning, error)"
@@ -23,3 +36,6 @@ configuration:
   home_assistant_integration:
     name: "Home Assistant Integration"
     description: "Enable specific features and optimizations for Home Assistant integration"
+  network_range:
+    name: "Trusted Network Range"
+    description: "CIDR range for trusted clients (e.g., 192.168.0.0/16). Used for internal network detection."

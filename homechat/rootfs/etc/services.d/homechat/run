@@ -7,7 +7,10 @@
 declare site_name
 declare allow_signups
 declare port
+declare access_mode
 declare ssl
+declare certfile
+declare keyfile
 declare log_level
 declare enable_integrations
 declare auto_create_api_token
@@ -20,7 +23,10 @@ bashio::log.info "Starting HomeChat..."
 site_name=$(bashio::config 'site_name')
 allow_signups=$(bashio::config 'allow_signups')
 port=$(bashio::config 'port')
+access_mode=$(bashio::config 'access_mode')
 ssl=$(bashio::config 'ssl')
+certfile=$(bashio::config 'certfile')
+keyfile=$(bashio::config 'keyfile')
 log_level=$(bashio::config 'log_level')
 enable_integrations=$(bashio::config 'enable_integrations')
 auto_create_api_token=$(bashio::config 'auto_create_api_token')
@@ -31,10 +37,49 @@ network_range=$(bashio::config 'network_range')
 export RAILS_ENV=production
 export RAILS_SERVE_STATIC_FILES=true
 export RAILS_LOG_TO_STDOUT=true
-export RAILS_FORCE_SSL=false
-export RAILS_ASSUME_SSL=false
 export RAILS_RELATIVE_URL_ROOT=""
 export HOME_ASSISTANT_ADDON=true
+
+# SSL Configuration based on access mode
+# - ingress: HA handles SSL termination, we assume SSL from proxy headers
+# - direct_ssl: Terminate SSL at Rails/Puma layer with certificates
+# - direct_http: No SSL, plain HTTP (for local network only)
+case "${access_mode}" in
+    "ingress")
+        bashio::log.info "Access mode: Home Assistant Ingress (SSL handled by HA)"
+        export RAILS_ASSUME_SSL=true
+        export RAILS_FORCE_SSL=false
+        ssl_enabled=false
+        ;;
+    "direct_ssl")
+        bashio::log.info "Access mode: Direct SSL (certificates at /ssl)"
+        export RAILS_ASSUME_SSL=false
+        export RAILS_FORCE_SSL=false
+        ssl_enabled=true
+        # Validate certificate files exist
+        if [[ ! -f "/ssl/${certfile}" ]]; then
+            bashio::log.error "SSL certificate not found: /ssl/${certfile}"
+            bashio::exit.nok "SSL certificate file missing"
+        fi
+        if [[ ! -f "/ssl/${keyfile}" ]]; then
+            bashio::log.error "SSL key not found: /ssl/${keyfile}"
+            bashio::exit.nok "SSL key file missing"
+        fi
+        bashio::log.info "Using SSL certificates: /ssl/${certfile}, /ssl/${keyfile}"
+        ;;
+    "direct_http")
+        bashio::log.info "Access mode: Direct HTTP (no SSL - local network only)"
+        export RAILS_ASSUME_SSL=false
+        export RAILS_FORCE_SSL=false
+        ssl_enabled=false
+        ;;
+    *)
+        bashio::log.warning "Unknown access mode: ${access_mode}, defaulting to ingress"
+        export RAILS_ASSUME_SSL=true
+        export RAILS_FORCE_SSL=false
+        ssl_enabled=false
+        ;;
+esac
 # Generate or load persistent secret key
 if [[ ! -f "/data/secret_key_base" ]]; then
     echo "$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')" > /data/secret_key_base
@@ -140,4 +185,11 @@ fi
 
 # Start the Rails server
 bashio::log.info "Starting HomeChat server on port ${port}..."
-exec ./bin/rails server -b 0.0.0.0 -p "${port}"
+
+if [[ "${ssl_enabled}" == "true" ]]; then
+    bashio::log.info "Starting with SSL enabled..."
+    # Start Puma directly with SSL configuration
+    exec bundle exec puma -b "ssl://0.0.0.0:${port}?key=/ssl/${keyfile}&cert=/ssl/${certfile}" -e production
+else
+    exec ./bin/rails server -b 0.0.0.0 -p "${port}"
+fi
