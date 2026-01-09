@@ -2,6 +2,26 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.10] - 2025-01-09
+
+### Fixed
+- Fix admin dashboard crash caused by incorrect route helper (admin_admin_credentials_path typo)
+
+### Added
+- Command palette (Cmd+K / Ctrl+K) for quick channel switching
+- Swipe-to-open gesture for mobile sidebar navigation
+- Unread message indicators in sidebar
+- Message entrance animations and micro-interactions
+- Custom SVG illustrations for empty states
+- Send confirmation feedback (checkmark animation)
+- Auto-focus message input on channel load and after sending
+
+### Improved
+- Mobile touch targets increased to 44px minimum for better accessibility
+- Mobile keyboard handling with visualViewport API
+- Sidebar spring animation for smoother mobile experience
+- Privacy: Switched to system font stack (removed external Google Fonts dependency)
+
 ## [1.0.1] - 2024-09-19
 
 ### Fixed
