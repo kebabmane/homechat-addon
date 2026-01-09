@@ -2,6 +2,12 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.11] - 2025-01-09
+
+### Fixed
+- Enable mDNS/Zeroconf discovery in add-on mode (was previously disabled)
+- Fix Bullet N+1 query warning in DM channels endpoint
+
 ## [1.0.10] - 2025-01-09
 
 ### Fixed
