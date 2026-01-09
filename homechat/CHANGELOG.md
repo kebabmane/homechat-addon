@@ -2,6 +2,14 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.14] - 2025-01-10
+
+### Fixed
+- **Critical:** Image attachments now persist across container restarts
+  - Storage directory symlinked from /app/storage -> /data/storage
+  - Existing uploads migrated automatically on upgrade
+- Images were returning 404 after addon restarts due to non-persistent storage
+
 ## [1.0.13] - 2025-01-10
 
 ### Added

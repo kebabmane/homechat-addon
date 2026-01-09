@@ -127,6 +127,26 @@ bashio::log.info "Log Level: ${log_level}"
 # Ensure database exists
 cd /app || bashio::exit.nok "Could not change to app directory"
 
+# Setup persistent storage directory for Active Storage uploads
+if [[ ! -d "/data/storage" ]]; then
+    bashio::log.info "Creating persistent storage directory..."
+    mkdir -p /data/storage
+fi
+
+# Symlink app storage to persistent data directory
+if [[ -d "/app/storage" && ! -L "/app/storage" ]]; then
+    # Move any existing files to persistent storage
+    if [[ "$(ls -A /app/storage 2>/dev/null)" ]]; then
+        bashio::log.info "Moving existing storage files to persistent location..."
+        cp -rn /app/storage/* /data/storage/ 2>/dev/null || true
+    fi
+    rm -rf /app/storage
+fi
+if [[ ! -L "/app/storage" ]]; then
+    ln -sf /data/storage /app/storage
+    bashio::log.info "Linked /app/storage -> /data/storage"
+fi
+
 # Setup database if needed
 if [[ ! -f "/data/production.sqlite3" ]]; then
     bashio::log.info "Setting up database..."
