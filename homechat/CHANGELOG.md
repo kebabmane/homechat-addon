@@ -2,6 +2,20 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.13] - 2025-01-10
+
+### Added
+- Push notification callbacks moved to Message model (single source of truth)
+- Mention-specific FCM notifications when @username is used
+- Auto-invite mentioned users to channels
+
+### Fixed
+- Remove redundant FCM notification calls from API controller
+- Notifications now work consistently across web, API, and mobile origins
+
+### Documentation
+- Updated FCM_SETUP.md with notification types table
+
 ## [1.0.12] - 2025-01-09
 
 ### Fixed
