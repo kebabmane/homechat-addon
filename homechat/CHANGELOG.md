@@ -2,6 +2,14 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.12] - 2025-01-09
+
+### Fixed
+- Fix channel join routing (404 error when navigating directly to join URL)
+- Fix Turbo method syntax for link_to helpers (Rails 7+ compatibility)
+- Add missing googleauth gem to Gemfile.lock (was causing build failures)
+- Update all gems to latest versions (Rails 8.0.4)
+
 ## [1.0.11] - 2025-01-09
 
 ### Fixed
