@@ -1,159 +1,267 @@
-# HomeChat Configuration
+# HomeChat Add-on Configuration
 
-## Options
+Complete configuration reference for the HomeChat Home Assistant add-on.
 
-### Site Name
-**Default**: `HomeChat`
-**Type**: String (optional)
+## Configuration Options
 
-The display name for your HomeChat instance. This appears in the web interface header and browser title.
+### Site Settings
 
-### Allow Signups
-**Default**: `true`
-**Type**: Boolean
+#### Site Name
+| | |
+|-|-|
+| **Key** | `site_name` |
+| **Type** | String |
+| **Default** | `HomeChat` |
 
-Controls whether new users can create accounts:
-- `true`: Anyone can sign up for an account
-- `false`: Only existing users can log in (lockdown mode)
+Display name shown in the header and browser title.
 
-**Note**: The first user to sign up automatically becomes an administrator, regardless of this setting.
+#### Allow Signups
+| | |
+|-|-|
+| **Key** | `allow_signups` |
+| **Type** | Boolean |
+| **Default** | `true` |
 
-### Port
-**Default**: `3000`
-**Type**: Port number (1-65535)
+- `true` — Anyone can create an account
+- `false` — Only existing users can log in
 
-The port number HomeChat will listen on. If you change this, make sure to update any bookmarks or direct links.
+> **Note**: First user always becomes admin, regardless of this setting.
 
-### SSL
-**Default**: `false`
-**Type**: Boolean
+### Network Settings
 
-Enable SSL/TLS encryption for HomeChat:
-- `true`: Use HTTPS (requires SSL certificates in `/ssl/`)
-- `false`: Use HTTP
+#### Port
+| | |
+|-|-|
+| **Key** | `port` |
+| **Type** | Integer (1-65535) |
+| **Default** | `3000` |
 
-**Note**: Home Assistant's ingress provides SSL automatically, so this is typically not needed unless accessing HomeChat directly.
+HTTP port HomeChat listens on.
 
-### Log Level
-**Default**: `info`
-**Type**: Selection (debug, info, warning, error)
+#### SSL
+| | |
+|-|-|
+| **Key** | `ssl` |
+| **Type** | Boolean |
+| **Default** | `false` |
 
-Controls the verbosity of HomeChat application logs:
-- `debug`: Very detailed logs (useful for troubleshooting)
-- `info`: Standard operational logs
-- `warning`: Only warnings and errors
-- `error`: Only error messages
+Enable HTTPS. Requires certificates in `/ssl/`.
+
+> **Tip**: HA ingress provides SSL automatically. Only enable for direct access.
+
+#### Access Mode
+| | |
+|-|-|
+| **Key** | `access_mode` |
+| **Type** | Enum |
+| **Default** | `ingress` |
+
+| Value | Description |
+|-------|-------------|
+| `ingress` | Access through HA sidebar (recommended) |
+| `direct_ssl` | Direct HTTPS access |
+| `direct_http` | Direct HTTP access |
+
+#### Network Range
+| | |
+|-|-|
+| **Key** | `network_range` |
+| **Type** | CIDR notation |
+| **Default** | `192.168.0.0/16` |
+
+Network range for trusted proxy configuration. Used for CSRF protection with ingress.
+
+**Common values:**
+| Your HA IP | Use Range |
+|------------|-----------|
+| `192.168.x.x` | `192.168.0.0/16` |
+| `10.x.x.x` | `10.0.0.0/8` |
+| `172.16-31.x.x` | `172.16.0.0/12` |
+
+### Integration Settings
+
+#### Enable Integrations
+| | |
+|-|-|
+| **Key** | `enable_integrations` |
+| **Type** | Boolean |
+| **Default** | `true` |
+
+Enable API endpoints for external integrations.
+
+#### Auto-Create API Token
+| | |
+|-|-|
+| **Key** | `auto_create_api_token` |
+| **Type** | Boolean |
+| **Default** | `false` |
+
+Automatically generate an API token on startup. Token is shown in logs.
+
+#### Home Assistant Integration
+| | |
+|-|-|
+| **Key** | `home_assistant_integration` |
+| **Type** | Boolean |
+| **Default** | `false` |
+
+Enable Home Assistant-specific features for the [homechat-integration](https://github.com/kebabmane/homechat-integration).
+
+### Logging
+
+#### Log Level
+| | |
+|-|-|
+| **Key** | `log_level` |
+| **Type** | Enum |
+| **Default** | `info` |
+
+| Level | Description |
+|-------|-------------|
+| `debug` | Detailed debugging info |
+| `info` | Normal operation |
+| `warning` | Warnings and errors only |
+| `error` | Errors only |
 
 ## Data Persistence
 
-HomeChat stores all data in the `/data/` directory, which persists across add-on updates:
+All data is stored in `/data/` and persists across updates:
 
-- **Database**: `/data/production.sqlite3` - All chat messages, users, and settings
-- **Storage**: `/data/storage/` - File uploads and attachments (if enabled)
-- **Logs**: Application logs are available through Home Assistant's log viewer
+| Path | Contents |
+|------|----------|
+| `/data/production.sqlite3` | Database (users, messages, channels) |
+| `/data/storage/` | File uploads and attachments |
+| `/data/secret_key_base` | Encryption key (auto-generated) |
+| `/data/admin_credentials.json` | Auto-generated admin (if enabled) |
+
+## Access Methods
+
+### Via Home Assistant Ingress (Recommended)
+
+1. Click HomeChat in the HA sidebar
+2. SSL provided by Home Assistant
+3. Uses HA authentication session
+
+### Direct Access
+
+1. Navigate to `http://[HA_IP]:3000`
+2. Or `http://homeassistant.local:3000`
+3. Requires HomeChat login
+
+### External Access
+
+1. Configure HA for external access
+2. Access via HA ingress (recommended)
+3. Or port forward and enable SSL
 
 ## First Time Setup
 
-1. Install and start the HomeChat add-on
-2. Access HomeChat through the Home Assistant sidebar or web UI link
-3. Sign up for the first account - this user becomes the administrator
-4. Configure site settings in the admin panel (`/admin/settings`)
-5. Optionally disable signups to lock down the chat
+1. **Start the add-on**
+2. **Open HomeChat** from sidebar or direct URL
+3. **Create first account** — becomes admin automatically
+4. **Configure settings** at `/admin/settings`
+5. **Disable signups** if desired (for security)
 
 ## Admin Features
 
-The first user to sign up becomes an administrator and can:
-- Access admin settings at `/admin/settings`
-- Change the site name
-- Enable/disable user signups
-- View system information
-- Manage user accounts (future feature)
+Administrators (`/admin/`) can:
 
-## User Management
+- **Settings** — Site name, signups, integrations
+- **Users** — View and manage accounts
+- **Bots** — Create AI assistants
+- **Integrations** — API tokens, webhooks
+- **System** — View system information
 
-### Creating Users
-- If signups are enabled: Users can create accounts at `/users/sign_up`
-- If signups are disabled: Only administrators can create accounts
+## User Features
 
-### User Settings
-Each user can customize their experience at `/settings`:
+Each user (`/settings`) can:
+
 - Change username and password
-- Configure "Enter to send" preference
-- Update profile information
+- Enable two-factor authentication
+- Set timezone preferences
+- Configure "Enter to send"
 
-### Network Range
-**Default**: `192.168.0.0/16`
-**Type**: String (optional)
-
-Specifies the network range where your Home Assistant server is located. This is used to configure trusted proxies for proper request handling when accessing HomeChat through Home Assistant's ingress interface.
-
-**Common values**:
-- `192.168.0.0/16` - Covers most home networks (192.168.x.x)
-- `192.168.1.0/24` - Specific subnet (192.168.1.x only)
-- `10.0.0.0/8` - Private networks using 10.x.x.x
-- `172.16.0.0/12` - Private networks using 172.16-31.x.x
-
-**How to determine your network range**:
-1. Find your Home Assistant server's IP address (e.g., 192.168.1.161)
-2. Use the appropriate range that includes this IP:
-   - If HA IP is 192.168.1.161, use `192.168.0.0/16` or `192.168.1.0/24`
-   - If HA IP is 10.0.1.100, use `10.0.0.0/8`
-
-**Note**: This setting is crucial for proper CSRF protection and request handling when using Home Assistant's ingress feature.
-
-## Networking
-
-### Internal Access
-HomeChat is accessible through:
-- Home Assistant sidebar (recommended)
-- Direct URL: `http://homeassistant.local:PORT`
-- IP address: `http://[HA_IP]:PORT`
-
-### External Access
-To access HomeChat from outside your network:
-1. Configure Home Assistant for external access
-2. Use Home Assistant's ingress feature (recommended)
-3. Or forward the HomeChat port through your router
-
-## Backup and Restore
+## Backup & Restore
 
 ### Backup
-The SQLite database and storage directory should be included in your regular Home Assistant backups. For manual backup:
-1. Stop the HomeChat add-on
-2. Copy `/addon_configs/local_homechat/data/` to a safe location
+
+Included in HA backups automatically. For manual backup:
+
+```bash
+# Stop add-on first
+cp -r /addon_configs/local_homechat/data/ /backup/homechat/
+```
 
 ### Restore
-1. Stop the HomeChat add-on
-2. Replace the `/data/` directory contents
-3. Restart the add-on
+
+```bash
+# Stop add-on first
+cp -r /backup/homechat/data/* /addon_configs/local_homechat/data/
+# Start add-on
+```
 
 ## Troubleshooting
 
-### Common Issues
+### Add-on Won't Start
 
-**Add-on fails to start**
-- Check available disk space
-- Verify port is not in use by another service
-- Check Home Assistant logs for detailed error messages
+| Check | Solution |
+|-------|----------|
+| Disk space | Free up space |
+| Port conflict | Change port or stop conflicting service |
+| Logs | Check HA > Settings > Add-ons > HomeChat > Log |
 
-**Database corruption**
-- Stop the add-on
-- Backup your data if possible
-- Delete `/data/production.sqlite3`
-- Restart the add-on (will create a fresh database)
+### Can't Access Web Interface
 
-**Performance issues**
-- Check system resources (CPU, memory, disk)
-- Review log level setting (debug logs can impact performance)
-- Consider hardware limitations on older Raspberry Pi models
+| Check | Solution |
+|-------|----------|
+| Add-on running | Start the add-on |
+| Port correct | Verify port in config |
+| Firewall | Allow port through firewall |
+| Ingress | Try direct URL access |
 
-**Can't access web interface**
-- Verify the add-on is running
-- Check port configuration
-- Try accessing directly via IP address
-- Check Home Assistant ingress settings
+### Database Issues
 
-### Log Files
-- Add-on logs: Available in Home Assistant > Settings > Add-ons > HomeChat > Log
-- Application logs: Rails logs are forwarded to the add-on logs
-- Database logs: SQLite operations logged at debug level
+```bash
+# Stop add-on
+# Backup current database (if possible)
+cp /data/production.sqlite3 /data/production.sqlite3.bak
+# Delete corrupted database
+rm /data/production.sqlite3
+# Start add-on (creates fresh database)
+```
+
+### Login Problems
+
+| Issue | Solution |
+|-------|----------|
+| Forgot password | Reset via admin or recreate database |
+| Account locked | Wait 30 min or unlock via console |
+| 2FA lost | Admin can disable, or use backup codes |
+
+### Performance Issues
+
+| Check | Solution |
+|-------|----------|
+| Log level | Set to `info` (not `debug`) |
+| Database size | Large databases may slow down |
+| Resources | Check HA system resources |
+
+## FAQ
+
+**Q: Can I use HomeChat without Home Assistant?**
+A: Yes! Use the [Docker deployment](https://github.com/kebabmane/homechat) for standalone use.
+
+**Q: How do I connect the HA integration?**
+A: Install [homechat-integration](https://github.com/kebabmane/homechat-integration) and use the API token from admin panel.
+
+**Q: Is my data encrypted?**
+A: Passwords are bcrypt hashed. Enable SSL for encrypted connections.
+
+**Q: Can I migrate from Docker to the add-on?**
+A: Copy the `/data/` directory contents to the add-on data directory.
+
+## Related Documentation
+
+- [Main HomeChat Docs](https://github.com/kebabmane/homechat/blob/main/docs/)
+- [HA Integration Setup](https://github.com/kebabmane/homechat/blob/main/docs/deployment/home-assistant.md)
+- [Security Guide](https://github.com/kebabmane/homechat/blob/main/docs/security/hardening-guide.md)

@@ -1,79 +1,77 @@
 # Home Assistant Add-on: HomeChat
 
-![Supports aarch64 Architecture][aarch64-shield]
-![Supports amd64 Architecture][amd64-shield]
-![Supports armhf Architecture][armhf-shield]
-![Supports armv7 Architecture][armv7-shield]
-![Supports i386 Architecture][i386-shield]
+![Supports aarch64][aarch64-shield]
+![Supports amd64][amd64-shield]
+![Supports armhf][armhf-shield]
+![Supports armv7][armv7-shield]
+![Supports i386][i386-shield]
 
-Self-hosted chat for Home Assistant households. Built on Rails 8, SQLite, Tailwind, and Hotwire.
+Self-hosted, offline-first chat for Home Assistant households.
 
 ## About
 
-HomeChat is designed to run on a LAN with zero Internet connectivity, making it perfect for households that want private, secure communication that doesn't rely on external services.
+HomeChat is a private chat platform designed to work completely offline on your local network. No cloud dependencies, no external services — just secure communication for your household.
 
 **Key Features:**
-- **Offline-First**: Works completely without internet connectivity
-- **Real-time Messaging**: Built with Rails 8 and Hotwire for instant messaging
-- **User Management**: Built-in user system with admin controls
-- **PWA Support**: Install as a mobile app for native-like experience
-- **SQLite Database**: No external database required
-- **Tailwind CSS**: Clean, responsive interface
+- **Offline-First** — Works without internet connectivity
+- **Real-Time Messaging** — Instant updates via WebSockets
+- **User Management** — Built-in admin controls and permissions
+- **PWA Support** — Install as a mobile app
+- **AI Bots** — Optional LLM-powered assistants
+- **HA Integration** — Two-way communication with automations
+
+## Quick Start
+
+1. **Install** the add-on from the add-on store
+2. **Start** the add-on
+3. **Open** HomeChat from the HA sidebar
+4. **Sign up** — First user becomes admin
 
 ## Configuration
 
-### Site Name
-The name that appears in the HomeChat interface header.
+See [DOCS.md](DOCS.md) for complete configuration reference.
 
-### Allow Signups
-Control whether new users can create accounts. Disable this to lock down the chat to existing users only.
+### Basic Settings
 
-### Port
-The port HomeChat will listen on (default: 3000).
+| Option | Default | Description |
+|--------|---------|-------------|
+| `site_name` | HomeChat | Display name in header |
+| `allow_signups` | true | Allow new user registration |
+| `port` | 3000 | HTTP port |
+| `log_level` | info | Logging verbosity |
 
-### SSL
-Enable SSL/TLS encryption. Requires SSL certificates in the Home Assistant SSL directory.
+### Home Assistant Integration
 
-### Log Level
-Control the verbosity of HomeChat logs (debug, info, warning, error).
-
-## Usage
-
-1. After installation, HomeChat will be available in your Home Assistant sidebar
-2. The first user to sign up will automatically become an administrator
-3. Administrators can:
-   - Configure site settings
-   - Control user signups
-   - Manage user accounts
-4. All chat data is stored locally on your Home Assistant instance
+| Option | Default | Description |
+|--------|---------|-------------|
+| `enable_integrations` | true | Enable API endpoints |
+| `auto_create_api_token` | false | Generate API token on start |
+| `home_assistant_integration` | false | Enable HA-specific features |
 
 ## Data Storage
 
-- **Database**: SQLite database stored in `/data/production.sqlite3`
-- **Uploads**: File uploads stored in `/data/storage/`
-- **Logs**: Application logs available in Home Assistant logs
+All data persists across updates in `/data/`:
 
-## Troubleshooting
+```
+/data/
+├── production.sqlite3    # Database
+├── storage/              # File uploads
+└── secret_key_base       # Encryption key
+```
 
-### Add-on won't start
-1. Check the Home Assistant logs for error messages
-2. Ensure the port is not already in use
-3. Verify sufficient disk space for the database
+## First User Setup
 
-### Can't access the web interface
-1. Check that the port is correctly configured
-2. Ensure ingress is enabled in the add-on configuration
-3. Try accessing directly via `http://homeassistant.local:3000`
-
-### Database issues
-The add-on will automatically create and migrate the database on first start. If you encounter database issues:
-1. Stop the add-on
-2. Delete `/data/production.sqlite3`
-3. Restart the add-on (this will recreate the database)
+The first user to sign up automatically becomes an administrator with access to:
+- Admin settings (`/admin/settings`)
+- User management
+- Integration configuration
+- Bot management
 
 ## Support
 
-For support and bug reports, please visit the [HomeChat repository](https://github.com/kebabmane/homechat).
+- [Configuration Reference](DOCS.md)
+- [GitHub Issues](https://github.com/kebabmane/homechat/issues)
+- [Main Documentation](https://github.com/kebabmane/homechat/blob/main/docs/)
 
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
