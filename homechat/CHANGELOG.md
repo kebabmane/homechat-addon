@@ -2,6 +2,15 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.15] - 2025-01-10
+
+### Fixed
+- **Critical:** iOS app image attachments now load correctly
+  - Switched Active Storage from redirect mode to proxy mode
+  - Files are now served directly through Rails without HTTP redirects
+  - This fixes compatibility issues with mobile apps and CORS
+  - Reference: https://github.com/rails/rails/issues/33549
+
 ## [1.0.14] - 2025-01-10
 
 ### Fixed
