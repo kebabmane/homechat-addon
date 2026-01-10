@@ -2,6 +2,14 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.16] - 2025-01-10
+
+### Fixed
+- **Critical:** Enable image thumbnails for iOS app
+  - Added `image_processing` gem for Active Storage variants
+  - Added `vips` library to Docker image for image processing
+  - Thumbnails now generate correctly for image attachments
+
 ## [1.0.15] - 2025-01-10
 
 ### Fixed

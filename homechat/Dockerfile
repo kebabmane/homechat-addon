@@ -27,7 +27,9 @@ RUN \
         avahi-dev \
         avahi-compat-libdns_sd \
         avahi \
-        dbus && \
+        dbus \
+        vips \
+        vips-dev && \
     gem install bundler
 
 # Create app directory
