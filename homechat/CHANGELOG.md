@@ -2,6 +2,21 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.17] - 2026-01-11
+
+### Added
+- **Scoped API Tokens:** Fine-grained permission system for API tokens
+  - Token types: user, admin, bot
+  - Scope patterns: `admin:*`, `channel:*:read`, `channel:<id>:write`, etc.
+  - Channel-specific permissions with read/write/manage levels
+  - Optional token expiration dates
+  - Bot tokens restricted from user data endpoints
+  - Backward compatible: existing tokens retain full access
+
+### Improved
+- Admin UI: Token management with scope selection and channel binding
+- Token edit page for modifying permissions after creation
+
 ## [1.0.16] - 2025-01-10
 
 ### Fixed

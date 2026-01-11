@@ -1,5 +1,5 @@
 name: "HomeChat"
-version: "1.0.16"
+version: "1.0.17"
 slug: "homechat"
 description: "Self-hosted chat for Home Assistant households. Built on Rails 8, SQLite, Tailwind, and Hotwire."
 url: "https://github.com/kebabmane/homechat"
@@ -26,6 +26,8 @@ options:
   auto_create_api_token: true
   home_assistant_integration: true
   network_range: "192.168.0.0/16"
+  discovery_mode: "auto"
+  enable_nabu_casa: true
 schema:
   site_name: "str?"
   allow_signups: "bool"
@@ -39,6 +41,8 @@ schema:
   auto_create_api_token: "bool"
   home_assistant_integration: "bool"
   network_range: "str?"
+  discovery_mode: "list(auto|local_only|disabled)?"
+  enable_nabu_casa: "bool?"
 ports:
   "3000/tcp": 3000
 webui: "http://[HOST]:[PORT:3000]"
