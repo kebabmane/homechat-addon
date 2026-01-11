@@ -16,6 +16,8 @@ declare enable_integrations
 declare auto_create_api_token
 declare home_assistant_integration
 declare network_range
+declare discovery_mode
+declare enable_nabu_casa
 
 bashio::log.info "Starting HomeChat..."
 
@@ -32,6 +34,8 @@ enable_integrations=$(bashio::config 'enable_integrations')
 auto_create_api_token=$(bashio::config 'auto_create_api_token')
 home_assistant_integration=$(bashio::config 'home_assistant_integration')
 network_range=$(bashio::config 'network_range')
+discovery_mode=$(bashio::config 'discovery_mode')
+enable_nabu_casa=$(bashio::config 'enable_nabu_casa')
 
 # Set environment variables
 export RAILS_ENV=production
@@ -97,7 +101,60 @@ export NETWORK_RANGE="${network_range:-192.168.0.0/16}"
 if bashio::supervisor.ping; then
     export SUPERVISOR_TOKEN="${SUPERVISOR_TOKEN}"
     export HOMEASSISTANT_URL="http://supervisor/core"
+
+    # Detect Nabu Casa remote access if enabled
+    if [[ "${enable_nabu_casa}" == "true" ]]; then
+        bashio::log.info "Checking for Nabu Casa remote access..."
+
+        # Query the Supervisor API for Nabu Casa status
+        nabu_casa_url=""
+        if bashio::api.supervisor GET /core/api/config true &>/dev/null; then
+            # Try to get the external URL from HA config
+            external_url=$(bashio::api.supervisor GET /core/api/config '.external_url // empty' 2>/dev/null || echo "")
+
+            if [[ -n "${external_url}" && "${external_url}" == *"nabu.casa"* ]]; then
+                nabu_casa_url="${external_url}"
+                bashio::log.info "Nabu Casa URL detected: ${nabu_casa_url}"
+            fi
+        fi
+
+        # Export Nabu Casa URL if found
+        if [[ -n "${nabu_casa_url}" ]]; then
+            export NABU_CASA_URL="${nabu_casa_url}"
+            bashio::log.info "Remote access via Nabu Casa is available"
+        else
+            bashio::log.info "Nabu Casa not detected or not configured"
+        fi
+    fi
 fi
+
+# Configure discovery mode
+# - auto: Enable mDNS on local network, also expose via Nabu Casa if available
+# - local_only: Only mDNS discovery, no cloud/remote access
+# - disabled: No discovery service at all
+case "${discovery_mode}" in
+    "auto")
+        bashio::log.info "Discovery mode: auto (mDNS + Nabu Casa if available)"
+        export DISCOVERY_MODE="local"
+        export DISCOVERY_ENABLED="true"
+        ;;
+    "local_only")
+        bashio::log.info "Discovery mode: local_only (mDNS only)"
+        export DISCOVERY_MODE="local"
+        export DISCOVERY_ENABLED="true"
+        unset NABU_CASA_URL  # Don't expose Nabu Casa URL
+        ;;
+    "disabled")
+        bashio::log.info "Discovery mode: disabled (no discovery)"
+        export DISCOVERY_MODE="disabled"
+        export DISCOVERY_ENABLED="false"
+        ;;
+    *)
+        bashio::log.info "Discovery mode: auto (default)"
+        export DISCOVERY_MODE="local"
+        export DISCOVERY_ENABLED="true"
+        ;;
+esac
 
 # Set log level for Rails
 case "${log_level}" in

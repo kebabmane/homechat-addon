@@ -2,6 +2,20 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.18] - 2026-01-12
+
+### Fixed
+- **Critical:** Fix 403 Forbidden error for Home Assistant integration after scoped tokens update
+  - `legacy_full_access?` now treats empty scopes array as full access (not just nil)
+  - Existing API tokens work correctly again without needing reconfiguration
+
+### Added
+- Unread message count tracking for channels and DMs
+- `mark_as_read` API endpoint for marking channels as read
+- Password reset functionality with admin-generated reset links
+- User approval system for new registrations
+- Mobile setup page in user settings
+
 ## [1.0.17] - 2026-01-11
 
 ### Added
