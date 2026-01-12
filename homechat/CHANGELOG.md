@@ -2,6 +2,18 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.21] - 2026-01-12
+
+### Changed
+- Enable `host_network` and `host_dbus` for mDNS/Bonjour discovery
+  - LAN discovery now works when using `direct_http` or `direct_ssl` access modes
+  - iOS app can auto-detect HomeChat servers on local network
+- Updated Avahi config to listen on all host interfaces
+
+### Documentation
+- Added mDNS discovery compatibility notes to access mode documentation
+- Added discovery mode configuration documentation
+
 ## [1.0.20] - 2026-01-12
 
 ### Fixed

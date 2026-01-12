@@ -56,11 +56,28 @@ Enable HTTPS. Requires certificates in `/ssl/`.
 | **Type** | Enum |
 | **Default** | `ingress` |
 
+| Value | Description | mDNS Discovery |
+|-------|-------------|----------------|
+| `ingress` | Access through HA sidebar | Not available |
+| `direct_ssl` | Direct HTTPS access | Works |
+| `direct_http` | Direct HTTP access | Works |
+
+> **Note**: mDNS/Bonjour discovery (for iOS app auto-detection) only works with `direct_http` or `direct_ssl` modes because it requires host network access.
+
+#### Discovery Mode
+| | |
+|-|-|
+| **Key** | `discovery_mode` |
+| **Type** | Enum |
+| **Default** | `auto` |
+
 | Value | Description |
 |-------|-------------|
-| `ingress` | Access through HA sidebar (recommended) |
-| `direct_ssl` | Direct HTTPS access |
-| `direct_http` | Direct HTTP access |
+| `auto` | mDNS + Nabu Casa if available |
+| `local_only` | mDNS only (no cloud) |
+| `disabled` | No discovery |
+
+> **Tip**: Use `direct_http` access mode for LAN discovery to work. The iOS app can auto-detect HomeChat servers via mDNS when using direct access modes.
 
 #### Network Range
 | | |
