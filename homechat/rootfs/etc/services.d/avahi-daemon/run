@@ -3,6 +3,18 @@
 # Start Avahi daemon for mDNS/DNS-SD service discovery
 # ==============================================================================
 
+# With host_network: true, the host already runs Avahi on port 5353
+# We can't run our own Avahi daemon - instead, the dnssd gem will
+# communicate with the host's Avahi via D-Bus
+#
+# Check if we're in host network mode by looking for host Avahi socket
+if [ -S /var/run/avahi-daemon/socket ] || pgrep -x avahi-daemon > /dev/null 2>&1; then
+    bashio::log.info "Host Avahi detected - using host mDNS service"
+    bashio::log.info "HomeChat will register via host's Avahi daemon"
+    # Keep service alive but don't start our own daemon
+    exec sleep infinity
+fi
+
 bashio::log.info "Starting Avahi daemon for mDNS service discovery..."
 
 # Wait for D-Bus to be ready

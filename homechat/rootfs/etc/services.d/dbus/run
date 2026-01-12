@@ -1,7 +1,14 @@
 #!/usr/bin/with-contenv bashio
 # ==============================================================================
-# Start D-Bus system daemon
+# Start D-Bus system daemon (or use host D-Bus if available)
 # ==============================================================================
+
+# Check if host D-Bus is already available (host_dbus: true in config.yaml)
+if [ -S /var/run/dbus/system_bus_socket ]; then
+    bashio::log.info "Using host D-Bus (socket already available)"
+    # Keep service running but don't start our own daemon
+    exec sleep infinity
+fi
 
 bashio::log.info "Starting D-Bus system daemon..."
 

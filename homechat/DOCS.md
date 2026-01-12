@@ -56,13 +56,13 @@ Enable HTTPS. Requires certificates in `/ssl/`.
 | **Type** | Enum |
 | **Default** | `ingress` |
 
-| Value | Description | mDNS Discovery |
-|-------|-------------|----------------|
-| `ingress` | Access through HA sidebar | Not available |
-| `direct_ssl` | Direct HTTPS access | Works |
-| `direct_http` | Direct HTTP access | Works |
+| Value | Description |
+|-------|-------------|
+| `ingress` | Access through HA sidebar (recommended) |
+| `direct_ssl` | Direct HTTPS access |
+| `direct_http` | Direct HTTP access |
 
-> **Note**: mDNS/Bonjour discovery (for iOS app auto-detection) only works with `direct_http` or `direct_ssl` modes because it requires host network access.
+> **Note**: mDNS/Bonjour auto-discovery is not available in Home Assistant addon mode due to Docker network isolation. iOS app users should set up the server manually using the URL or QR code from the web interface.
 
 #### Discovery Mode
 | | |

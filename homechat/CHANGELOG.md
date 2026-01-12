@@ -2,6 +2,20 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.22] - 2026-01-12
+
+### Fixed
+- **Critical:** Fix startup crash caused by D-Bus/Avahi conflicts in addon mode
+  - D-Bus service now detects host socket and skips starting own daemon
+  - Avahi service detects host Avahi and skips starting own daemon
+- Properly disable mDNS discovery in Home Assistant addon mode
+  - Docker network isolation prevents multicast UDP from reaching LAN
+  - Rails discovery service now cleanly skips mDNS when running as HA addon
+
+### Documentation
+- Updated access modes documentation to clarify mDNS limitation
+- Added note about manual iOS app setup (QR code or URL) in addon mode
+
 ## [1.0.21] - 2026-01-12
 
 ### Changed
