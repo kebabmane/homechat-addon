@@ -2,6 +2,12 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.20] - 2026-01-12
+
+### Fixed
+- Make bot creation API idempotent - returns existing bot if name already taken
+  - Prevents errors when Home Assistant integration re-registers its bot
+
 ## [1.0.19] - 2026-01-12
 
 ### Fixed
