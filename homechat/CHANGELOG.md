@@ -2,6 +2,12 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.19] - 2026-01-12
+
+### Fixed
+- **Critical:** Fix startup crash due to undefined `require_login` callback
+  - Added `raise: false` to skip_before_action in PasswordResetsController
+
 ## [1.0.18] - 2026-01-12
 
 ### Fixed
