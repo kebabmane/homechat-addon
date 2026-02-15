@@ -84,9 +84,9 @@ case "${access_mode}" in
         ssl_enabled=false
         ;;
 esac
-# Generate or load persistent secret key
+# Generate or load persistent secret key (using cryptographically secure random)
 if [[ ! -f "/data/secret_key_base" ]]; then
-    echo "$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')$(cat /proc/sys/kernel/random/uuid | sed 's/-//g')" > /data/secret_key_base
+    openssl rand -hex 64 > /data/secret_key_base
 fi
 export SECRET_KEY_BASE=$(cat /data/secret_key_base)
 export PORT="${port}"
@@ -219,20 +219,19 @@ fi
 bashio::log.info "Running database seeds..."
 ./bin/rails db:seed
 
-# Display admin credentials if they exist
+# Display admin credentials info if they exist (NOT the actual password for security)
 if [[ -f "/data/admin_credentials.json" ]]; then
     bashio::log.info "🔐 Admin credentials available!"
 
-    # Parse credentials from JSON file using bashio (Home Assistant's JSON parser)
+    # Parse only non-sensitive data from JSON file
     admin_username=$(bashio::jq /data/admin_credentials.json '.username')
-    admin_password=$(bashio::jq /data/admin_credentials.json '.password')
     created_at=$(bashio::jq /data/admin_credentials.json '.created_at')
 
     bashio::log.info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     bashio::log.info "🚀 HOMECHAT ADMIN ACCESS"
     bashio::log.info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     bashio::log.info "👤 Username: ${admin_username}"
-    bashio::log.info "🔑 Password: ${admin_password}"
+    bashio::log.info "🔑 Password: See /data/admin_credentials.json"
     bashio::log.info "🕒 Created: ${created_at}"
     bashio::log.info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     bashio::log.info "⚠️  Please change this password after first login!"
