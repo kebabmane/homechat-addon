@@ -5,6 +5,8 @@
 
 Self-hosted, offline-first chat for Home Assistant households.
 
+This repository packages the Rails HomeChat server as a Home Assistant add-on. The custom Home Assistant integration lives separately in `homechat-integration`.
+
 ## Quick Installation
 
 [![Add Repository][add-repo-shield]][add-repo-url]
@@ -59,6 +61,25 @@ Containers are automatically built and published to GitHub Container Registry:
 - **Registry**: `ghcr.io/kebabmane/addon-homechat`
 - **Triggers**: Commits to main, version tags
 - **Multi-arch**: All architectures built in parallel
+
+## Compatibility
+
+| Component | Notes |
+|-----------|-------|
+| HomeChat server | Rails API v1, currently aligned with the main `homechat` repo |
+| Home Assistant integration | Use `homechat-integration` for native HA services and sensors |
+| Mobile apps | Android and iOS discover and connect through `/api/v1/server_info` |
+| Data | SQLite database, uploads, and app state are stored in the add-on data volume |
+
+The add-on should track server releases closely. When the Rails API contract changes, update the add-on image tag, changelog, and documentation together.
+
+## Local Development
+
+```bash
+docker build -t local/homechat-addon ./homechat
+```
+
+For Home Assistant Supervisor testing, add this repository as a local add-on repository and install the `homechat` add-on from the add-on store.
 
 ## Related Repositories
 
