@@ -114,7 +114,7 @@ if bashio::supervisor.ping; then
 
             if [[ -n "${external_url}" && "${external_url}" == *"nabu.casa"* ]]; then
                 nabu_casa_url="${external_url}"
-                bashio::log.info "Nabu Casa URL detected: ${nabu_casa_url}"
+                bashio::log.info "Nabu Casa URL detected"
             fi
         fi
 
@@ -223,14 +223,12 @@ bashio::log.info "Running database seeds..."
 if [[ -f "/data/admin_credentials.json" ]]; then
     bashio::log.info "🔐 Admin credentials available!"
 
-    # Parse only non-sensitive data from JSON file
-    admin_username=$(bashio::jq /data/admin_credentials.json '.username')
     created_at=$(bashio::jq /data/admin_credentials.json '.created_at')
 
     bashio::log.info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     bashio::log.info "🚀 HOMECHAT ADMIN ACCESS"
     bashio::log.info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    bashio::log.info "👤 Username: ${admin_username}"
+    bashio::log.info "👤 Username: See /data/admin_credentials.json"
     bashio::log.info "🔑 Password: See /data/admin_credentials.json"
     bashio::log.info "🕒 Created: ${created_at}"
     bashio::log.info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -247,7 +245,9 @@ if [[ "${auto_create_api_token}" == "true" && "${home_assistant_integration}" ==
       unless ApiToken.exists?(name: 'Home Assistant Addon')
         token = ApiToken.generate_for_integration('Home Assistant Addon')
         puts 'Created API token for Home Assistant integration'
-        puts 'Token: ' + token.token
+        File.write('/data/home_assistant_api_token', token.token)
+        File.chmod(0600, '/data/home_assistant_api_token')
+        puts 'Token written to /data/home_assistant_api_token'
       end
 
       # Set integration settings

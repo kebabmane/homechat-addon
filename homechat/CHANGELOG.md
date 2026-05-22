@@ -2,6 +2,11 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+- **Ruby:** Updated Ruby version from 3.3.0 to 3.3.11 to align with Rails backend requirements
+
 ## [1.0.22] - 2026-01-12
 
 ### Fixed

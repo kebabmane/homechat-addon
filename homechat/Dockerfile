@@ -5,7 +5,7 @@ FROM $BUILD_FROM
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install Ruby and build dependencies
-ARG RUBY_VERSION=3.3.0
+ARG RUBY_VERSION=3.3.11
 RUN \
     apk update && \
     apk add --no-cache \
