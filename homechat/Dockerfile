@@ -1,7 +1,7 @@
 ARG RUBY_VERSION=4.0.1
+ARG BUILD_FROM=ghcr.io/home-assistant/base:3.23
 FROM ruby:${RUBY_VERSION}-alpine AS ruby
 
-ARG BUILD_FROM=ghcr.io/home-assistant/base:3.23
 FROM $BUILD_FROM
 
 # Set shell to bash (already available in HA base images)

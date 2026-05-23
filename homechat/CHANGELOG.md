@@ -2,6 +2,11 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.26] - 2026-05-23
+
+### Fixed
+- Fixed Docker build argument scoping for the Home Assistant base image stage.
+
 ## [1.0.25] - 2026-05-23
 
 ### Fixed
