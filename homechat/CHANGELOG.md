@@ -2,6 +2,11 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.28] - 2026-05-24
+
+### Fixed
+- Fixed add-on startup when `network_range` is unset or contains a disabled/invalid value by avoiding early Rails logger calls during application boot.
+
 ## [1.0.27] - 2026-05-23
 
 ### Fixed
