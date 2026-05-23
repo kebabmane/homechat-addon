@@ -4,22 +4,27 @@ FROM $BUILD_FROM
 # Set shell to bash (already available in HA base images)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install Ruby and build dependencies
-ARG RUBY_VERSION=3.3.11
+# Install Ruby and build dependencies. Home Assistant's Alpine 3.19 base ships
+# Ruby 3.2, so build Ruby from source to match the HomeChat server lockfile.
+ARG RUBY_VERSION=4.0.1
 RUN \
     apk update && \
     apk add --no-cache \
-        ruby \
-        ruby-dev \
-        ruby-bigdecimal \
-        ruby-bundler \
+        autoconf \
+        bison \
         build-base \
-        sqlite \
-        sqlite-dev \
+        ca-certificates \
         curl \
+        dbus \
         git \
+        gmp-dev \
+        linux-headers \
         libc6-compat \
         libffi-dev \
+        openssl-dev \
+        readline-dev \
+        sqlite \
+        sqlite-dev \
         yaml-dev \
         zlib-dev \
         nodejs \
@@ -27,10 +32,19 @@ RUN \
         avahi-dev \
         avahi-compat-libdns_sd \
         avahi \
-        dbus \
         vips \
         vips-dev && \
-    gem install bundler
+    ruby_minor="${RUBY_VERSION%.*}" && \
+    curl -fsSL "https://cache.ruby-lang.org/pub/ruby/${ruby_minor}/ruby-${RUBY_VERSION}.tar.gz" -o /tmp/ruby.tar.gz && \
+    tar -xzf /tmp/ruby.tar.gz -C /tmp && \
+    cd "/tmp/ruby-${RUBY_VERSION}" && \
+    ./configure --disable-install-doc --enable-shared && \
+    make -j"$(nproc)" && \
+    make install && \
+    cd / && \
+    rm -rf "/tmp/ruby-${RUBY_VERSION}" /tmp/ruby.tar.gz && \
+    gem install bundler -v 4.0.4 --no-document && \
+    ruby -v
 
 # Create app directory
 WORKDIR /app

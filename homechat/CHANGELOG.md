@@ -2,6 +2,11 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.24] - 2026-05-23
+
+### Fixed
+- Fixed the add-on image build by compiling Ruby 4.0.1 in the Home Assistant base image, matching the HomeChat server runtime and lockfile.
+
 ## [1.0.23] - 2026-05-23
 
 ### Added

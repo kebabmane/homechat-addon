@@ -92,6 +92,7 @@ jobs:
             BUILD_REF=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
             BUILD_REPOSITORY=${{ github.repository }}
             BUILD_VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            RUBY_VERSION=4.0.1
 
   # Build amd64 after aarch64 completes
   build-amd64:
@@ -168,3 +169,4 @@ jobs:
             BUILD_REF=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
             BUILD_REPOSITORY=${{ github.repository }}
             BUILD_VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            RUBY_VERSION=4.0.1

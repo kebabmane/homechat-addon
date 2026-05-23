@@ -10,4 +10,4 @@ labels:
   org.opencontainers.image.source: "https://github.com/kebabmane/homechat-addon"
   org.opencontainers.image.licenses: "MIT"
 args:
-  RUBY_VERSION: "3.3.11"
+  RUBY_VERSION: "4.0.1"
