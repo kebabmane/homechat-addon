@@ -2,6 +2,12 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.27] - 2026-05-23
+
+### Fixed
+- Fixed production asset builds by explicitly declaring the add-on's trusted Home Assistant ingress/local HTTP transport mode.
+- Generated and persisted ActiveRecord encryption keys for production boot, with legacy-compatible key derivation for existing add-on databases.
+
 ## [1.0.26] - 2026-05-23
 
 ### Fixed

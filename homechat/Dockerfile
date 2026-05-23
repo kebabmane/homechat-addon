@@ -54,12 +54,23 @@ RUN bundle config set --local without 'development test' && \
 # Copy application code
 COPY homechat/ ./
 
-# Set production environment
-ENV RAILS_ENV=production
+# Set production environment. The server production config requires an explicit
+# transport posture; the add-on runs behind HA ingress or trusted local/LAN HTTP.
+ENV RAILS_ENV=production \
+    HOME_ASSISTANT_ADDON=true \
+    RAILS_ALLOW_INSECURE_HTTP=true
 
-# Build Tailwind CSS and precompile assets
-RUN SECRET_KEY_BASE=dummy bundle exec rails tailwindcss:build
-RUN SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
+# Build Tailwind CSS and precompile assets with build-only dummy secrets.
+RUN SECRET_KEY_BASE=dummy \
+    AR_ENCRYPTION_PRIMARY_KEY=0000000000000000000000000000000000000000000000000000000000000000 \
+    AR_ENCRYPTION_DETERMINISTIC_KEY=1111111111111111111111111111111111111111111111111111111111111111 \
+    AR_ENCRYPTION_KEY_DERIVATION_SALT=2222222222222222222222222222222222222222222222222222222222222222 \
+    bundle exec rails tailwindcss:build
+RUN SECRET_KEY_BASE=dummy \
+    AR_ENCRYPTION_PRIMARY_KEY=0000000000000000000000000000000000000000000000000000000000000000 \
+    AR_ENCRYPTION_DETERMINISTIC_KEY=1111111111111111111111111111111111111111111111111111111111111111 \
+    AR_ENCRYPTION_KEY_DERIVATION_SALT=2222222222222222222222222222222222222222222222222222222222222222 \
+    bundle exec rails assets:precompile
 
 # Copy root filesystem
 COPY addon/homechat/rootfs /
