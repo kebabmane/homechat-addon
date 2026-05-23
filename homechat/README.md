@@ -15,10 +15,17 @@ HomeChat is a private chat platform designed to work completely offline on your 
 **Key Features:**
 - **Offline-First** — Works without internet connectivity
 - **Real-Time Messaging** — Instant updates via WebSockets
+- **E2EE for Private/DM Content** — Compatible clients encrypt private-channel and direct-message content before upload
 - **User Management** — Built-in admin controls and permissions
 - **PWA Support** — Install as a mobile app
 - **AI Bots** — Optional LLM-powered assistants
 - **HA Integration** — Two-way communication with automations
+
+## E2EE Scope
+
+HomeChat provides end-to-end encrypted message content for private channels and direct messages when used with current web, iOS, Android, or macOS clients. The server stores encrypted payloads for those conversations and rejects plaintext writes.
+
+This does not hide all information from the server. Metadata such as users, channel membership, timestamps, message sizes, delivery activity, and encrypted blob presence remains visible. Web E2EE also depends on trusted JavaScript delivery from the add-on. Home Assistant automations, bots, and webhooks are not E2EE clients and should use public/plaintext rooms unless they are upgraded to participate in the E2EE protocol. Attachments are not E2EE yet in private/DM channels.
 
 ## Quick Start
 

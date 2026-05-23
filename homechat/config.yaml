@@ -15,7 +15,7 @@ map:
   - config:ro
 options:
   site_name: "HomeChat"
-  allow_signups: true
+  allow_signups: false
   port: 3000
   access_mode: "ingress"
   ssl: false
@@ -23,9 +23,9 @@ options:
   keyfile: "privkey.pem"
   log_level: "info"
   enable_integrations: true
-  auto_create_api_token: true
+  auto_create_api_token: false
   home_assistant_integration: true
-  network_range: "192.168.0.0/16"
+  network_range: ""
   discovery_mode: "auto"
   enable_nabu_casa: true
 schema:
@@ -44,7 +44,7 @@ schema:
   discovery_mode: "list(auto|local_only|disabled)?"
   enable_nabu_casa: "bool?"
 ports:
-  "3000/tcp": 3000
+  "3000/tcp": null
 webui: "http://[HOST]:[PORT:3000]"
 ingress: true
 ingress_port: 3000

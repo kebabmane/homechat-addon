@@ -38,4 +38,4 @@ configuration:
     description: "Enable specific features and optimizations for Home Assistant integration"
   network_range:
     name: "Trusted Network Range"
-    description: "CIDR range for trusted clients (e.g., 192.168.0.0/16). Used for internal network detection."
+    description: "Optional CIDR range for an additional trusted reverse proxy. Leave empty unless you control the proxy source range."

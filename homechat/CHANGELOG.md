@@ -2,10 +2,19 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
-## [Unreleased]
+## [1.0.23] - 2026-05-23
+
+### Added
+- Documented E2EE scope and limitations for add-on users.
 
 ### Changed
 - **Ruby:** Updated Ruby version from 3.3.0 to 3.3.11 to align with Rails backend requirements
+- Safer default configuration for testing and fresh installs:
+  - Signups are disabled by default.
+  - Automatic API token creation is disabled by default.
+  - The trusted proxy network range is empty by default.
+  - Port 3000 is no longer exposed outside ingress unless explicitly configured.
+- Clarified that `network_range` should only be set for a controlled reverse proxy source range.
 
 ## [1.0.22] - 2026-01-12
 

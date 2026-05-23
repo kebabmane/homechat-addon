@@ -73,6 +73,18 @@ Containers are automatically built and published to GitHub Container Registry:
 
 The add-on should track server releases closely. When the Rails API contract changes, update the add-on image tag, changelog, and documentation together.
 
+## E2EE Scope
+
+The add-on packages the same Rails server used by standalone HomeChat deployments. Private channels and direct messages require E2EE-capable web, iOS, Android, or macOS clients; the server stores encrypted message payloads rather than plaintext message bodies for those conversations.
+
+Important limits remain:
+
+- The server still sees metadata such as users, channel membership, timestamps, message sizes, delivery activity, and encrypted blob presence.
+- Web E2EE depends on trusted JavaScript delivery from this server. A compromised add-on/container could serve modified web code.
+- Device identity is trust-on-first-use until explicit key verification is implemented.
+- Attachments are not E2EE yet in private/DM channels.
+- Home Assistant automations, bots, and webhooks are not E2EE clients and should use public/plaintext rooms unless they are upgraded to participate in the E2EE protocol.
+
 ## Local Development
 
 ```bash

@@ -91,11 +91,11 @@ fi
 export SECRET_KEY_BASE=$(cat /data/secret_key_base)
 export PORT="${port}"
 export SITE_NAME="${site_name:-HomeChat}"
-export ALLOW_SIGNUPS="${allow_signups:-true}"
+export ALLOW_SIGNUPS="${allow_signups:-false}"
 export ENABLE_INTEGRATIONS="${enable_integrations:-true}"
-export AUTO_CREATE_API_TOKEN="${auto_create_api_token:-true}"
+export AUTO_CREATE_API_TOKEN="${auto_create_api_token:-false}"
 export HOME_ASSISTANT_INTEGRATION="${home_assistant_integration:-true}"
-export NETWORK_RANGE="${network_range:-192.168.0.0/16}"
+export NETWORK_RANGE="${network_range:-}"
 
 # Set Home Assistant specific environment variables
 if bashio::supervisor.ping; then

@@ -84,16 +84,11 @@ Enable HTTPS. Requires certificates in `/ssl/`.
 |-|-|
 | **Key** | `network_range` |
 | **Type** | CIDR notation |
-| **Default** | `192.168.0.0/16` |
+| **Default** | Empty |
 
-Network range for trusted proxy configuration. Used for CSRF protection with ingress.
+Optional CIDR range for additional trusted proxies. Leave empty unless HomeChat is behind a specific reverse proxy whose source range you control.
 
-**Common values:**
-| Your HA IP | Use Range |
-|------------|-----------|
-| `192.168.x.x` | `192.168.0.0/16` |
-| `10.x.x.x` | `10.0.0.0/8` |
-| `172.16-31.x.x` | `172.16.0.0/12` |
+Do not set this to your whole LAN. Broad ranges can allow clients on that network to spoof forwarding headers.
 
 ### Integration Settings
 
