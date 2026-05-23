@@ -2,6 +2,11 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.25] - 2026-05-23
+
+### Fixed
+- Fixed add-on image build time by copying Ruby 4.0.1 from the official multi-architecture Ruby Alpine image on top of the Home Assistant 3.23 base image.
+
 ## [1.0.24] - 2026-05-23
 
 ### Fixed

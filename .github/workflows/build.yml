@@ -84,7 +84,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            BUILD_FROM=ghcr.io/home-assistant/aarch64-base:3.19
+            BUILD_FROM=ghcr.io/home-assistant/aarch64-base:3.23
             BUILD_ARCH=aarch64
             BUILD_DATE=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             BUILD_DESCRIPTION=HomeChat Home Assistant Addon
@@ -161,7 +161,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.19
+            BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.23
             BUILD_ARCH=amd64
             BUILD_DATE=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             BUILD_DESCRIPTION=HomeChat Home Assistant Addon
