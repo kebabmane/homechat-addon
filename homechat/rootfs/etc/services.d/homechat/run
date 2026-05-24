@@ -18,6 +18,7 @@ declare home_assistant_integration
 declare network_range
 declare discovery_mode
 declare enable_nabu_casa
+declare ingress_entry
 
 bashio::log.info "Starting HomeChat..."
 
@@ -41,7 +42,6 @@ enable_nabu_casa=$(bashio::config 'enable_nabu_casa')
 export RAILS_ENV=production
 export RAILS_SERVE_STATIC_FILES=true
 export RAILS_LOG_TO_STDOUT=true
-export RAILS_RELATIVE_URL_ROOT=""
 export HOME_ASSISTANT_ADDON=true
 
 # SSL Configuration based on access mode
@@ -53,12 +53,22 @@ case "${access_mode}" in
         bashio::log.info "Access mode: Home Assistant Ingress (SSL handled by HA)"
         export RAILS_ASSUME_SSL=true
         export RAILS_FORCE_SSL=false
+        ingress_entry=$(bashio::addon.ingress_entry 2>/dev/null || true)
+        if [[ -n "${ingress_entry}" && "${ingress_entry}" != "/" ]]; then
+            ingress_entry="/${ingress_entry#/}"
+            ingress_entry="${ingress_entry%/}"
+            export RAILS_RELATIVE_URL_ROOT="${ingress_entry}"
+            bashio::log.info "Ingress base path: ${RAILS_RELATIVE_URL_ROOT}"
+        else
+            export RAILS_RELATIVE_URL_ROOT=""
+        fi
         ssl_enabled=false
         ;;
     "direct_ssl")
         bashio::log.info "Access mode: Direct SSL (certificates at /ssl)"
         export RAILS_ASSUME_SSL=false
         export RAILS_FORCE_SSL=false
+        export RAILS_RELATIVE_URL_ROOT=""
         ssl_enabled=true
         # Validate certificate files exist
         if [[ ! -f "/ssl/${certfile}" ]]; then
@@ -75,12 +85,14 @@ case "${access_mode}" in
         bashio::log.info "Access mode: Direct HTTP (no SSL - local network only)"
         export RAILS_ASSUME_SSL=false
         export RAILS_FORCE_SSL=false
+        export RAILS_RELATIVE_URL_ROOT=""
         ssl_enabled=false
         ;;
     *)
         bashio::log.warning "Unknown access mode: ${access_mode}, defaulting to ingress"
         export RAILS_ASSUME_SSL=true
         export RAILS_FORCE_SSL=false
+        export RAILS_RELATIVE_URL_ROOT=""
         ssl_enabled=false
         ;;
 esac

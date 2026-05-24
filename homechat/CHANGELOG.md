@@ -2,6 +2,16 @@
 
 All notable changes to the HomeChat Home Assistant Add-on will be documented in this file.
 
+## [1.0.30] - 2026-05-25
+
+### Fixed
+- Fixed Home Assistant Ingress and public web rendering by shipping the corrected Tailwind stylesheet references and ingress-aware Rails URLs in the container build branch.
+
+## [1.0.29] - 2026-05-24
+
+### Fixed
+- Fixed Home Assistant Ingress rendering by publishing Rails asset, route, favicon, manifest, service worker, and JavaScript request URLs under the ingress base path.
+
 ## [1.0.28] - 2026-05-24
 
 ### Fixed
